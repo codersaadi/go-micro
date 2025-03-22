@@ -1,4 +1,4 @@
-# Go Micro Framework
+# Go Micro Starterkit
 
 A lightweight, production-ready microservice framework for Go applications with built-in support for common middleware, database connectivity, logging, metrics, and more.
 
