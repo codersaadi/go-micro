@@ -1,0 +1,65 @@
+# Binaries and executables
+/bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go specific
+*.o
+*.a
+*.test
+*.out
+/vendor/
+go.work
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment and configuration
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env
+
+# Build and dependency directories
+/build/
+/dist/
+/tmp/
+
+# Logs
+/logs/
+*.log
+
+# Docker files
+docker-compose.override.yml
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Generated files
+/generated/
+*.pb.go
+*_gen.go
+
+# Test coverage
+coverage.txt
+coverage.html
+/coverage/
+
+# Application specific
+/uploads/
+/downloads/
+
+# Temporary files
+*.tmp
