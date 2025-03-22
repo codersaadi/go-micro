@@ -75,14 +75,15 @@ func BootstrapServer() {
 	userService := service.NewUserService(userRepo, app.Logger)
 	userHandler := handler.NewUserHandler(app, userService)
 	// Register routes (Example Routes)
-	app.POST("/register", micro.Handler(userHandler.Register))
-	app.POST("/login", micro.Handler(userHandler.Login))
-	app.GET("/users/{id}", micro.Handler(userHandler.GetUser))
-	app.PUT("/users/{id}", micro.Handler(userHandler.UpdateUser))
-	app.DELETE("/users/{id}", micro.Handler(userHandler.DeleteUser))
+	app.POST("/register", userHandler.Register)
+	app.POST("/register", userHandler.Register)
+	app.POST("/login", userHandler.Login)
+	app.GET("/users/{id}", userHandler.GetUser)
+	app.PUT("/users/{id}", userHandler.UpdateUser)
+	app.DELETE("/users/{id}", userHandler.DeleteUser)
 
 	// Register a rate limit info endpoint (optional)
-	app.GET("/rate-limit-info", micro.Handler(func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	app.GET("/rate-limit-info", func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 		info := map[string]interface{}{
 			"enabled":             app.Config.RateLimiter.Enabled,
 			"requests_per_second": app.Config.RateLimiter.RequestsPerS,
@@ -90,7 +91,7 @@ func BootstrapServer() {
 			"strategy":            app.Config.RateLimiter.Strategy,
 		}
 		return app.JSON(w, http.StatusOK, info)
-	}))
+	})
 
 	// Start server
 	if err := app.Start(); err != nil && err != http.ErrServerClosed {
