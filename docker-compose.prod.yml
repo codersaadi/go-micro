@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${DOCKER_REGISTRY:-local}/go-microservice:${TAG:-latest}
+    container_name: go-microservice
+    restart: always
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      - PORT=8080
+      - APP_NAME=go-microservice
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - DB_DSN=${DB_DSN}
+      - METRICS_ENABLED=true
+      - CORS_ENABLED=true
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://yourdomain.com}
+      - RATE_LIMITER_ENABLED=true
+      - RATE_LIMITER_REQUESTS_PER_SECOND=${RATE_LIMIT:-10}
+      - RATE_LIMITER_BURST=${RATE_BURST:-20}
+      - RATE_LIMITER_STRATEGY=${RATE_STRATEGY:-ip}
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+      
+  postgres:
+    image: postgres:15-alpine
+    container_name: microservice-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-postgres}
+      - POSTGRES_DB=${DB_NAME:-microservice}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      
+  nginx:
+    image: nginx:alpine
+    container_name: microservice-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+      - ./nginx/www:/var/www/html
+    networks:
+      - app-network
+    depends_on:
+      - app
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
