@@ -74,7 +74,17 @@ func BootstrapServer() {
 	userRepo := repository.NewUserRepository(pool, app.Logger)
 	userService := service.NewUserService(userRepo, app.Logger)
 	userHandler := handler.NewUserHandler(app, userService)
-	// Register routes (Example Routes)
+
+	v1 := app.Group("/v1")
+	v1.GET("/welcome", func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+		return app.JSON(
+			w, http.StatusOK,
+			map[string]interface{}{
+				"message": "Welcome to v1",
+			},
+		)
+	})
+
 	app.POST("/register", userHandler.Register)
 	app.POST("/login", userHandler.Login)
 	app.GET("/users/{id}", userHandler.GetUser)

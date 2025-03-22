@@ -380,11 +380,81 @@ func (a *App) Handle(method, path string, handler Handler) {
 	}).Methods(method)
 }
 
-func (a *App) Handler(h Handler) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		ctx := r.Context()
-		if err := h(ctx, w, r); err != nil {
-			a.handleError(w, err)
-		}
+// RouterGroup represents a group of routes with shared prefix and middleware
+type RouterGroup struct {
+	prefix     string
+	middleware []mux.MiddlewareFunc
+	app        *App
+	router     *mux.Router
+}
+
+// Group creates a new router group with the given prefix
+func (a *App) Group(prefix string) *RouterGroup {
+	subRouter := a.Router.PathPrefix(prefix).Subrouter()
+	return &RouterGroup{
+		prefix:     prefix,
+		middleware: []mux.MiddlewareFunc{},
+		app:        a,
+		router:     subRouter,
 	}
+}
+
+// WithMiddleware adds middleware to the router group
+func (g *RouterGroup) WithMiddleware(middleware mux.MiddlewareFunc) *RouterGroup {
+	g.middleware = append(g.middleware, middleware)
+	g.router.Use(middleware)
+	return g
+}
+
+// Group creates a nested group
+func (g *RouterGroup) Group(prefix string) *RouterGroup {
+	subRouter := g.router.PathPrefix(prefix).Subrouter()
+
+	// Apply parent middlewares to subgroup
+	for _, m := range g.middleware {
+		subRouter.Use(m)
+	}
+
+	return &RouterGroup{
+		prefix:     g.prefix + prefix,
+		middleware: g.middleware,
+		app:        g.app,
+		router:     subRouter,
+	}
+}
+
+// GET adds a GET route to the group
+func (g *RouterGroup) GET(path string, handler Handler) *RouterGroup {
+	g.HandleMethod(http.MethodGet, path, handler)
+	return g
+}
+
+// POST adds a POST route to the group
+func (g *RouterGroup) POST(path string, handler Handler) *RouterGroup {
+	g.HandleMethod(http.MethodPost, path, handler)
+	return g
+}
+
+// PUT adds a PUT route to the group
+func (g *RouterGroup) PUT(path string, handler Handler) *RouterGroup {
+	g.HandleMethod(http.MethodPut, path, handler)
+	return g
+}
+
+// DELETE adds a DELETE route to the group
+func (g *RouterGroup) DELETE(path string, handler Handler) *RouterGroup {
+	g.HandleMethod(http.MethodDelete, path, handler)
+	return g
+}
+
+// HandleMethod adds a route with the specified method to the group
+// Using a different name than Handle to avoid conflicts with App.Handle
+func (g *RouterGroup) HandleMethod(method, path string, handler Handler) *RouterGroup {
+	g.router.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		if err := handler(ctx, w, r); err != nil {
+			g.app.handleError(w, err)
+		}
+	}).Methods(method)
+	return g
 }
