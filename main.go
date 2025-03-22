@@ -1,7 +1,7 @@
 package main
 
-import "github.com/go-micro/cmd"
+import "github.com/codersaadi/go-micro/cmd"
 
 func main() {
-	cmd.ExecuteServer()
+	cmd.BootstrapServer()
 }
