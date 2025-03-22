@@ -76,7 +76,6 @@ func BootstrapServer() {
 	userHandler := handler.NewUserHandler(app, userService)
 	// Register routes (Example Routes)
 	app.POST("/register", userHandler.Register)
-	app.POST("/register", userHandler.Register)
 	app.POST("/login", userHandler.Login)
 	app.GET("/users/{id}", userHandler.GetUser)
 	app.PUT("/users/{id}", userHandler.UpdateUser)
