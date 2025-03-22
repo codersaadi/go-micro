@@ -1,6 +1,6 @@
-# Go Micro Starterkit
+# Go Microservice Template
 
-A lightweight, production-ready microservice framework for Go applications with built-in support for common middleware, database connectivity, logging, metrics, and more.
+A lightweight, production-ready microservice template for Go applications with built-in support for common middleware, database connectivity, logging, metrics, and more.
 
 ## Features
 
@@ -9,13 +9,25 @@ A lightweight, production-ready microservice framework for Go applications with 
 - 🔄 **Middleware stack**: Request ID, logging, metrics, recovery, timeout, etc.
 - 🛣️ **Routing**: Built on Gorilla Mux with an improved API
 - 💾 **Database**: PostgreSQL integration with pgx
-<!-- - 🔐 **Authentication**: User registration and login with bcrypt password hashing (TODO,With OIDC SUPPORT) -->
 - ⚡ **Performance**: Rate limiting and configurable timeouts
 - 🏗️ **Clean Architecture**: Clear separation of concerns (handlers, services, repositories)
 - 🧪 **Health Checks**: Built-in health check endpoint
 
+## TODO Features
+
+- 🔐 **Authentication**: User registration and login with bcrypt password hashing
+- 🔑 **OIDC Support**: Integration with OpenID Connect providers
+- 📧 **Email Service**: Templated email sending capabilities
+- ⏰ **Job Scheduling**: Background task processing and scheduling
+- 📱 **Push Notifications**: Mobile and web push notification support
+- 🔍 **Full-text Search**: Integration with search engines
+- 🌐 **Internationalization**: Multi-language support
+- 📄 **API Documentation**: Auto-generated API docs with Swagger/OpenAPI
+- 🧩 **Plugin System**: Extensible architecture for custom plugins
+- 🔄 **Event Bus**: Internal publish/subscribe messaging
+
 ## Getting Started
-```bash
+```env
 git clone github.com/codersaadi/go-micro.git 
 cd ./go-micro
 ```
@@ -34,7 +46,7 @@ Create a `.env` file in the root directory:
 APP_NAME=user-service
 PORT=8080
 LOG_LEVEL=info
-DB_DSN=postgres://postgres:password@localhost:5432/gomicro?sslmode=disable
+DB_DSN=postgres://postgres:Saadsaad1@localhost:5432/gomicro?sslmode=disable
 ```
 
 ### Database Migrations
@@ -72,7 +84,7 @@ make docker-run
 │   ├── repository/       # Data access layer
 │   └── service/          # Business logic layer
 ├── pkg/                  # Public libraries
-│   └── micro/            # Micro framework components
+│   └── micro/            # Micro template components
 └── main.go               # Application entry point
 ```
 
@@ -100,7 +112,7 @@ if err := app.Start(); err != nil {
 
 ### Middleware
 
-The framework includes several built-in middleware components:
+The template includes several built-in middleware components:
 - Request ID generation
 - Logging
 - Metrics collection
@@ -133,7 +145,7 @@ func (h *UserHandler) GetUser(ctx context.Context, w http.ResponseWriter, r *htt
 
 ## Configuration
 
-The framework can be configured through environment variables:
+The template can be configured through environment variables:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
@@ -152,7 +164,7 @@ The framework can be configured through environment variables:
 
 ## Docker Support
 
-The framework includes Docker and docker-compose support:
+The template includes Docker and docker-compose support:
 
 ```bash
 # Run with Docker
