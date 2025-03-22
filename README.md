@@ -197,6 +197,14 @@ make run
 make clean
 ```
 
+## Contributing
+
+Contributions are welcome! Whether it's bug fixes, feature additions, or documentation improvements, feel free to fork the repository and submit a pull request.
+
+## About
+
+Developed by [Saad Bukhari](https://github.com/codersaadi)
+
 ## License
 
 [MIT License](LICENSE)
